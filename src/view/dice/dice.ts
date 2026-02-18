@@ -9,6 +9,7 @@ import {
 } from "../../utils";
 import { RollColor } from "./types";
 import { DiceView } from "./view";
+import { appendToActiveNote } from "src/utils/appendToNote";
 
 export class Dice {
   min: number = 1;
@@ -135,6 +136,10 @@ export class Dice {
           };
 
           this.updateTooltip(this.type);
+          appendToActiveNote(`- **${this.type}:** ${value}`, {
+                      atEnd: true,
+                      ensureNewline: true,
+                    });
         }
       }
     };
