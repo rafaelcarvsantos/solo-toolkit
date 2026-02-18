@@ -9,6 +9,7 @@ import { SoloToolkitView, VIEW_TYPE } from "./view";
 import { soloToolkitExtension } from "./inline/live";
 import { soloToolkitPostprocessor } from "./inline/read";
 import { backwardCompatibleFixes } from "./utils/backwardfixes";
+import { appendToActiveNote } from "./utils/appendToNote";
 
 export default class SoloToolkitPlugin extends Plugin {
   settings: SoloToolkitSettings;
@@ -25,6 +26,7 @@ export default class SoloToolkitPlugin extends Plugin {
         new SoloToolkitView(leaf, this.settings, this.saveSetting.bind(this))
     );
 
+  
     this.registerMarkdownPostProcessor(soloToolkitPostprocessor(this));
     this.registerEditorExtension(soloToolkitExtension(this));
 

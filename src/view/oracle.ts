@@ -12,6 +12,8 @@ import {
   AnswerVariant,
   Language,
 } from "src/utils/oracles";
+import { appendToActiveNote } from "src/utils/appendToNote";
+
 
 const MAX_REMEMBER_SIZE = 100;
 
@@ -224,6 +226,11 @@ export class OracleView {
         const value = oracle.getAnswer(type);
         this.answers.push([label, value]);
         this.addResult(label, value);
+        appendToActiveNote(`- **${label}:** ${value}`, {
+                    atEnd: true,
+                    ensureNewline: true,
+                  });
+              
       });
   }
 

@@ -25,6 +25,7 @@ import {
 import { CustomTableCategory } from "./types";
 import { parseKeyWithCurve } from "./parser";
 import { CustomDict } from "./customdict";
+import { appendToActiveNote } from "src/utils/appendToNote";
 
 export class WordView {
   view: View;
@@ -173,6 +174,10 @@ export class WordView {
         const value = generateWord(type);
         this.words.push([label, value]);
         this.addResult(label, value);
+        appendToActiveNote(`- **${label}:** ${value}`, {
+            atEnd: true,
+            ensureNewline: true,
+          });
       });
   }
 
