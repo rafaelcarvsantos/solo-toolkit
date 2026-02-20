@@ -2,12 +2,14 @@ import { dictionary } from "./dictionary";
 import { random, randomFrom } from "./dice";
 import { an, capitalize, identity } from "./helpers";
 
+
 export const vowels = ["a", "e", "i", "o", "u"];
 
 const getNoun = () => randomFrom(dictionary.nouns);
 const getVerb = () => randomFrom(dictionary.verbs);
 const getAdjective = () => randomFrom(dictionary.adjectives);
 const getAdverb = () => randomFrom(dictionary.adverbs);
+const getRandomEvent = () => randomFrom(dictionary.randomevent);
 
 const getSubject = () => capitalize(`${getAdjective()} ${getNoun()}`);
 const getAction = () => capitalize(`${getVerb()} ${getAdverb()}`);
@@ -158,6 +160,8 @@ const getLocationDescription = () => {
   return capitalize(`${word1} and ${word2}`);
 };
 
+const getCharacter = () => capitalize(randomFrom(dictionary.characterlist));
+
 export const generateWord = (type: string): string => {
   switch (type) {
     case "promptSubject":
@@ -184,6 +188,9 @@ export const generateWord = (type: string): string => {
       return getWilderness();
     case "locDescription":
       return getLocationDescription();
+
+    case "characterList":
+      return getCharacter();
 
     default:
       return "";

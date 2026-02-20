@@ -150,6 +150,7 @@ export class OracleView {
       this.createMythicBtn(tabName, "very unlikely");
       this.createMythicBtn(tabName, "nearly impossible");
       this.createMythicBtn(tabName, "impossible");
+      this.createMythicSceneCheckBtn(tabName, "Scene Check");
       this.createMythicFactorBtns(tabName);
     } else if (tabName === "default2") {
       this.createDefault2Btn(tabName, "-2");
@@ -256,6 +257,29 @@ export class OracleView {
         oracle.changeFactor(+1);
         counterEl.setText(oracle.factor.toString());
         this.view.setSettings({ mythicFactor: oracle.factor });
+      });
+  }
+
+  createMythicSceneCheckBtn(tabName: string, type: string) {
+    const label = oracleLabels[type] || capitalize(type);
+    const a = an(label);
+    new ButtonComponent(this.tabContentEls[tabName])
+      .setButtonText(label)
+      .setTooltip(`Check if scene is altered or interrupted`)
+      .onClick(() => {
+        const oracle = this.oracles[tabName];
+        if (!oracle || !(oracle instanceof MythicOracle)) return;
+        oracle.setLanguage(
+          (this.view.settings.oracleLanguage as Language) || "en"
+        );
+        const value = oracle.checkScene(type);
+        this.answers.push([label, value]);
+        this.addResult(label, value);
+        appendToActiveNote(`- **${label}:** ${value}`, {
+                    atEnd: true,
+                    ensureNewline: true,
+                  });
+              
       });
   }
 

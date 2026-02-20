@@ -1,5 +1,6 @@
-import { random } from "../dice";
+import { random, randomFrom } from "../dice";
 import { Oracle, BaseOracle } from "./shared";
+import { dictionary } from "../dictionary";
 
 const chart: Record<string, number[][]> = {
   certain: [
@@ -124,9 +125,25 @@ export class MythicOracle extends BaseOracle implements Oracle {
       [
         ex ? this.getWord("extreme") : "",
         this.getWord(yn ? "yes" : "no"),
-        ev ? `, ${this.getWord("event")}` : "",
+        ev ? `, ${this.getWord("event")}`+ "-> " + randomFrom(dictionary.randomevent) : "",
       ].join(" ")
     );
+  }
+
+   checkScene(variant: string): string {
+    const r = this.roll10(); // roll
+    let result = "";
+    if (r >= this.factor) {
+      result = "Scene is as expected";
+    } else if (r % 2 === 1) {
+      // odd
+      result = `Scene is altered`;
+    } else {
+      // even
+      result = `Scene is interrupted`;
+    }
+
+  return this.formatAnswer(result);
   }
 
   changeFactor(by: number) {
@@ -135,5 +152,9 @@ export class MythicOracle extends BaseOracle implements Oracle {
 
   private roll(): number {
     return random(1, 100);
+  }
+
+  private roll10(): number {
+    return random(1, 10);
   }
 }

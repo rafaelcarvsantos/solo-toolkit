@@ -10,6 +10,9 @@ import { soloToolkitExtension } from "./inline/live";
 import { soloToolkitPostprocessor } from "./inline/read";
 import { backwardCompatibleFixes } from "./utils/backwardfixes";
 import { appendToActiveNote } from "./utils/appendToNote";
+import { getOrCreateListsFile } from "./utils/ListFileCheckers";
+import { refreshListsCache } from "./utils/listsCache";
+
 
 export default class SoloToolkitPlugin extends Plugin {
   settings: SoloToolkitSettings;
@@ -19,6 +22,7 @@ export default class SoloToolkitPlugin extends Plugin {
 
     registerIcons();
     backwardCompatibleFixes(this.app.vault);
+    getOrCreateListsFile(this.app);
 
     this.registerView(
       VIEW_TYPE,
@@ -39,6 +43,13 @@ export default class SoloToolkitPlugin extends Plugin {
     });
 
     this.addSettingTab(new SoloToolkitSettingTab(this.app, this));
+    await refreshListsCache(this.app);
+    this.registerEvent(
+      this.app.vault.on("modify", (file) => {
+        if (file.path === "Lists.md") {
+          void refreshListsCache(this.app); // fire-and-forget
+        }
+    }));
   }
 
   onunload() {

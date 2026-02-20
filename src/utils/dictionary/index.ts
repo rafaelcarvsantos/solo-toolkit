@@ -14,6 +14,10 @@ import settlements from "./settlements";
 import buildings from "./buildings";
 import locations from "./locations";
 import oracle from "./oracle";
+import randomevent from "./randomeventfocus";
+
+const characterlist: string[] = [];
+const threadlist: string[] = [];
 
 export const dictionary = {
   adjectives,
@@ -32,4 +36,8 @@ export const dictionary = {
   buildings,
   locations,
   oracle,
+  randomevent,
+  characterlist,
+  threadlist
+
 };
