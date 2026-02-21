@@ -162,6 +162,8 @@ const getLocationDescription = () => {
 
 const getCharacter = () => capitalize(randomFrom(dictionary.characterlist));
 
+const getThread = () => capitalize(randomFrom(dictionary.threadlist));
+
 export const generateWord = (type: string): string => {
   switch (type) {
     case "promptSubject":
@@ -191,6 +193,8 @@ export const generateWord = (type: string): string => {
 
     case "characterList":
       return getCharacter();
+    case "threadList":
+      return getThread();
 
     default:
       return "";

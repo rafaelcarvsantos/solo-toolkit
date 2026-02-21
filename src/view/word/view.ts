@@ -84,6 +84,7 @@ export class WordView {
       this.createWordBtn("Locations", "locBuilding");
       this.createWordBtn("Locations", "locWilderness");
       this.createWordBtn("Mythic", "characterList");
+      this.createWordBtn("Mythic", "threadList");
     }
 
     this.customTables = [];
