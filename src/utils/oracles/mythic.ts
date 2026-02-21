@@ -1,6 +1,7 @@
 import { random, randomFrom } from "../dice";
 import { Oracle, BaseOracle } from "./shared";
 import { dictionary } from "../dictionary";
+import { appendToActiveNote } from "../appendToNote";
 
 const chart: Record<string, number[][]> = {
   certain: [
@@ -147,7 +148,12 @@ export class MythicOracle extends BaseOracle implements Oracle {
   }
 
   changeFactor(by: number) {
+    var oldChaos = this.factor
     this.factor = Math.min(Math.max(1, this.factor + by), 9);
+    appendToActiveNote(`- Chaos factor changed from ${oldChaos} to ${this.factor}`, {
+                        atEnd: true,
+                        ensureNewline: true,
+                      });
   }
 
   private roll(): number {
