@@ -243,12 +243,12 @@ export class Dice {
     if (mode === "sum") {
       const total = values.reduce((a, b) => a + b, 0);
       appendToActiveNote(
-        `- **${this.type} (${times} rolls):** **${total}**`,
+        `d: **${this.type} (${times} rolls):** **${total}**`,
         { atEnd: true, ensureNewline: true }
       );
     } else {
       appendToActiveNote(
-        `- **${this.type} (${times} rolls):** ${values
+        `d: **${this.type} (${times} rolls):** ${values
           .map((v) => this.format(v))
           .join(", ")}`,
         { atEnd: true, ensureNewline: true }

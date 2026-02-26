@@ -9,7 +9,6 @@ import { SoloToolkitView, VIEW_TYPE } from "./view";
 import { soloToolkitExtension } from "./inline/live";
 import { soloToolkitPostprocessor } from "./inline/read";
 import { backwardCompatibleFixes } from "./utils/backwardfixes";
-import { appendToActiveNote } from "./utils/appendToNote";
 import { getOrCreateListsFile } from "./utils/ListFileCheckers";
 import { refreshListsCache } from "./utils/listsCache";
 

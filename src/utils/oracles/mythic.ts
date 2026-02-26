@@ -150,7 +150,7 @@ export class MythicOracle extends BaseOracle implements Oracle {
   changeFactor(by: number) {
     var oldChaos = this.factor
     this.factor = Math.min(Math.max(1, this.factor + by), 9);
-    appendToActiveNote(`- Chaos factor changed from ${oldChaos} to ${this.factor}`, {
+    appendToActiveNote(`[E: Chaos factor changed from ${oldChaos} to ${this.factor}]`, {
                         atEnd: true,
                         ensureNewline: true,
                       });

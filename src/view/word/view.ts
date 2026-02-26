@@ -5,6 +5,8 @@ import {
   ExtraButtonComponent,
   TextAreaComponent,
   debounce,
+  Modal, 
+  Setting
 } from "obsidian";
 import { SoloToolkitView as View } from "../index";
 import {
@@ -26,6 +28,41 @@ import { CustomTableCategory } from "./types";
 import { parseKeyWithCurve } from "./parser";
 import { CustomDict } from "./customdict";
 import { appendToActiveNote } from "src/utils/appendToNote";
+
+class QuestionPromptModal extends Modal {
+  private question = "";
+
+  constructor(
+    app: any,
+    private onSubmit: (question: string) => void
+  ) {
+    super(app);
+  }
+
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl("h3", { text: "Question" });
+
+    new Setting(contentEl)
+      .setName("Enter a question")
+      .addText((t) =>
+        t.setPlaceholder("e.g. What happens next?")
+          .onChange((v) => (this.question = v))
+      );
+
+    new Setting(contentEl).addButton((b) =>
+      b.setCta().setButtonText("Insert").onClick(() => {
+        this.close();
+        this.onSubmit(this.question.trim());
+      })
+    );
+  }
+
+  onClose() {
+    this.contentEl.empty();
+  }
+}
 
 export class WordView {
   view: View;
@@ -173,14 +210,27 @@ export class WordView {
       .setButtonText(label)
       .setTooltip(`Generate ${wordTooltips[type] || type.toLowerCase()}`)
       .onClick(() => {
-        const value = generateWord(type);
-        this.words.push([label, value]);
-        this.addResult(label, value);
-        appendToActiveNote(`- **${label}:** ${value}`, {
-            atEnd: true,
-            ensureNewline: true,
-          });
-      });
+                      let value = generateWord(type);
+
+                      value = value
+                        .split(/< ?br ?\/? ?>|\\n/)
+                        .join("\n")
+                        .replace(/^\|\s*/, "")
+                        .replace(/\s*\|$/, "")
+                        .trim();
+
+                      // Open prompt, then append both lines
+                          new QuestionPromptModal(this.view.app, (question) => {
+                            const qLine = question ? `?${question}\n` : "";
+                            appendToActiveNote(`${qLine}-> **${label}:** ${value}\n=>`, {
+                              atEnd: true,
+                              ensureNewline: true,
+                            });
+
+                            this.words.push([label, value]);
+                            this.addResult(label, value);
+                          }).open();
+                          });
   }
 
   createCustomWordBtns(folder: TFolder, path: string[] = []) {
@@ -229,9 +279,27 @@ export class WordView {
         if (values.every((value) => !value)) return;
         for (let value of values) {
           if (value === `{${DEFAULT}}`) continue;
-          value = value.split(/< ?br ?\/? ?>|\\n/).join("\n");
-          this.words.push([type, value]);
-          this.addResult(type, value);
+          value = value
+          .replace(/\u00A0/g, " ")   // normalize non-breaking spaces
+          .split(/< ?br ?\/? ?>|\\n/)
+          .join("\n")
+          .replace(/\|/g, "")        // remove pipes
+          .replace(/"/g, "")         // remove double quotes
+          .replace(/\s+/g, " ")      // collapse whitespace
+          .trim();
+
+          new QuestionPromptModal(this.view.app, (question) => {
+                            const qLine = question ? `?${question}\n` : "";
+                            appendToActiveNote(`${qLine}-> **${type}:** ${value}\n=>`, {
+                              atEnd: true,
+                              ensureNewline: true,
+                            });
+
+                            this.words.push([type, value]);
+                            this.addResult(type, value);
+                          }).open();
+
+         
         }
       });
   }

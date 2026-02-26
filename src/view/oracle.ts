@@ -31,6 +31,40 @@ const oracleLabels: { [word: string]: string } = {
   high: "Likely",
 };
 
+import { Modal, Setting } from "obsidian";
+
+class QuestionPromptModal extends Modal {
+  private question = "";
+
+  constructor(app: any, private onSubmit: (question: string) => void) {
+    super(app);
+  }
+
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl("h3", { text: "Question" });
+
+    new Setting(contentEl)
+      .setName("Enter a question")
+      .addText((t) =>
+        t.setPlaceholder("e.g. What happens next?")
+          .onChange((v) => (this.question = v))
+      );
+
+    new Setting(contentEl).addButton((b) =>
+      b.setCta().setButtonText("Insert").onClick(() => {
+        this.close();
+        this.onSubmit(this.question.trim());
+      })
+    );
+  }
+
+  onClose() {
+    this.contentEl.empty();
+  }
+}
+
 export class OracleView {
   view: View;
   oracles: Record<string, Oracle>;
@@ -221,16 +255,20 @@ export class OracleView {
       .onClick(() => {
         const oracle = this.oracles[tabName];
         if (!oracle || !(oracle instanceof MythicOracle)) return;
-        oracle.setLanguage(
-          (this.view.settings.oracleLanguage as Language) || "en"
-        );
+
+        oracle.setLanguage((this.view.settings.oracleLanguage as Language) || "en");
+
         const value = oracle.getAnswer(type);
         this.answers.push([label, value]);
         this.addResult(label, value);
-        appendToActiveNote(`- **${label}:** ${value}`, {
-                    atEnd: true,
-                    ensureNewline: true,
-                  });
+
+        new QuestionPromptModal(this.view.app, (question) => {
+          const qLine = question ? `?${question}\n` : "";
+          appendToActiveNote(`${qLine}-> **${label}:** ${value}\n=>`, {
+            atEnd: true,
+            ensureNewline: true,
+          });
+        }).open();
               
       });
   }
@@ -275,7 +313,7 @@ export class OracleView {
         const value = oracle.checkScene(type);
         this.answers.push([label, value]);
         this.addResult(label, value);
-        appendToActiveNote(`- **${label}:** ${value}`, {
+        appendToActiveNote(`-> **${label}:** ${value}`, {
                     atEnd: true,
                     ensureNewline: true,
                   });
