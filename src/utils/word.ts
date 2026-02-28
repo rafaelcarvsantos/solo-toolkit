@@ -9,7 +9,7 @@ const getNoun = () => randomFrom(dictionary.nouns);
 const getVerb = () => randomFrom(dictionary.verbs);
 const getAdjective = () => randomFrom(dictionary.adjectives);
 const getAdverb = () => randomFrom(dictionary.adverbs);
-const getRandomEvent = () => randomFrom(dictionary.randomevent);
+
 
 const getSubject = () => capitalize(`${getAdjective()} ${getNoun()}`);
 const getAction = () => capitalize(`${getVerb()} ${getAdverb()}`);
@@ -164,6 +164,8 @@ const getCharacter = () => capitalize(randomFrom(dictionary.characterlist));
 
 const getThread = () => capitalize(randomFrom(dictionary.threadlist));
 
+const getRandomEvent = () => capitalize(randomFrom(dictionary.randomevent));
+
 export const generateWord = (type: string): string => {
   switch (type) {
     case "promptSubject":
@@ -195,6 +197,8 @@ export const generateWord = (type: string): string => {
       return getCharacter();
     case "threadList":
       return getThread();
+    case "randomevent":
+      return getRandomEvent();
 
     default:
       return "";

@@ -10,6 +10,7 @@ import { soloToolkitExtension } from "./inline/live";
 import { soloToolkitPostprocessor } from "./inline/read";
 import { backwardCompatibleFixes } from "./utils/backwardfixes";
 import { getOrCreateListsFile } from "./utils/ListFileCheckers";
+import { getOrCreateCampaignFile } from "./utils/CampaignFileCheckers";
 import { refreshListsCache } from "./utils/listsCache";
 
 
@@ -22,6 +23,7 @@ export default class SoloToolkitPlugin extends Plugin {
     registerIcons();
     backwardCompatibleFixes(this.app.vault);
     getOrCreateListsFile(this.app);
+    getOrCreateCampaignFile(this.app);
 
     this.registerView(
       VIEW_TYPE,

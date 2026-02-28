@@ -9,7 +9,6 @@ export async function refreshListsCache(app: App): Promise<void> {
   if (!file || !(file instanceof TFile)) return;
 
   const content = await app.vault.read(file);
-  console.log("aaaa");
   dictionary.characterlist = await readAndParseListSection("Characters");
   dictionary.threadlist = await readAndParseListSection("Threads");
 }

@@ -122,6 +122,7 @@ export class WordView {
       this.createWordBtn("Locations", "locWilderness");
       this.createWordBtn("Mythic", "characterList");
       this.createWordBtn("Mythic", "threadList");
+      this.createWordBtn("Mythic", "randomevent");
     }
 
     this.customTables = [];
